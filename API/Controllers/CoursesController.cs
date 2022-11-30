@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.Models.DTOs;
 using API.Models.Entities;
 using API.Models.Persistence;
 using Microsoft.AspNetCore.Mvc;
@@ -52,8 +53,8 @@ namespace API.Controllers
             }
         }
 
-        [HttpGet("{id}")] //Get Single Full Course
-        public async Task<IActionResult> GetPersonAsync(string id)
+        [HttpGet("full/{id}")] //Get Single Full Course
+        public async Task<IActionResult> GetFullCourseAsync(string id)
         {
             try
             {
@@ -69,33 +70,29 @@ namespace API.Controllers
             }
         }
 
-        // [HttpGet("{id}")]
-        // public async Task<IActionResult> GetPersonAsync(string id)
-        // {
-        //     try
-        //     {
-        //         var course = await _database.Courses.FindAsync(new Guid(id));
-        //         if (course == null)
-        //             return NotFound();
+        [HttpGet("{id}")] //Get Single DTO Course without prof
+        public async Task<IActionResult> GetCourseAsync(string id)
+        {
+            try
+            {
+                var course = await _database.Courses.FindAsync(new Guid(id));
+                if (course == null)
+                    return NotFound();
 
-        //         var response = new Response<PersonDto>
-        //         {
-        //             Data = new PersonDto
-        //             {
-        //                 Id = course.Id,
-        //                 title = course.Title,
-        //                 credits = course.NumberOfCredits,
+                var response = new CoursesDTO
+                {
+                    Id = course.Id,
+                    Title = course.Title,
+                    NumberOfCredits = course.NumberOfCredits,
                         
-        //             },
-        //         };
-                
-        //         return Ok(response);
-        //     }
-        //     catch (System.Exception)
-        //     {
-        //         return BadRequest();
-        //     }
-        // }
+                };
+                return Ok(response);
+            }
+            catch (System.Exception)
+            {
+                return BadRequest();
+            }
+        }
 
 
     }
